@@ -1,0 +1,87 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model userData {
+  userId       String @id
+  userFullName String
+  userEmail    String @unique
+  userPassword String
+
+  resumeData    resumeData[]
+  interviewData interviewData[]
+  comments      comments[]
+}
+
+model resumeData {
+  resumeId       String   @id
+  userId         String
+  user           userData @relation(fields: [userId], references: [userId])
+  resumeCloudUrl String
+  skills         String[]
+  experience     Int
+  Timestamp      DateTime @default(now())
+}
+
+model interviewData {
+  interviewId   String          @id
+  userId        String
+  user          userData        @relation(fields: [userId], references: [userId])
+  type          String
+  skill         String
+  level         String
+  Timestamp     DateTime        @default(now())
+  codeInterview codeInterview[]
+  mockInterview mockInterview[]
+}
+
+model codeInterview {
+  codeIntId   String        @id
+  interviewId String
+  interview   interviewData @relation(fields: [interviewId], references: [interviewId])
+  language    String
+  time        BigInt
+  question    String
+  code        String
+  output      String
+  feedBack    String
+  Timestamp   DateTime      @default(now())
+}
+
+model mockInterview {
+  mockIntId   String        @id
+  interviewId String
+  interview   interviewData @relation(fields: [interviewId], references: [interviewId])
+  feedback    Json[]
+  Timestamp   DateTime      @default(now())
+}
+
+model practiceQuestions {
+  questionId String     @id
+  question   String
+  type       String
+  skill      String
+  level      String
+  comments   comments[]
+}
+
+model comments {
+  commentId         String            @id
+  questionId        String
+  practiceQuestions practiceQuestions @relation(fields: [questionId], references: [questionId])
+  userId            String
+  user              userData          @relation(fields: [userId], references: [userId])
+  userFullName      String
+  Timestamp         DateTime          @default(now())
+}
