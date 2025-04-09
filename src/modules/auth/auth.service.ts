@@ -39,14 +39,12 @@ export const userLogin = expressAsyncHandler(async (req: Request, res: Response)
   res.cookie('auth', authToken, {
     httpOnly: true,
     secure: true,
-    sameSite: 'lax',
     path: '/',
     maxAge: 15 * 60 * 1000,
   });
   res.cookie('refresh', refreshToken, {
     httpOnly: true,
     secure: true,
-    sameSite: 'lax',
     path: '/',
     maxAge: 7 * 24 * 60 * 60 * 1000,
   });
@@ -104,7 +102,6 @@ export const authStatus = expressAsyncHandler(
         res.cookie('auth', newAccessToken, {
           httpOnly: true,
           secure: false,
-          sameSite: 'lax',
           path: '/',
           maxAge: 15 * 60 * 1000,
         });
