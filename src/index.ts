@@ -12,15 +12,15 @@ dotenv.config(); // Load .env variables
 const app = express();
 
 // Middlewares
-app.use(express.json());
-app.use(cookieParser());
 app.use(
   cors({
-    origin: 'http://localhost:4200',
+    origin: '*',
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true,
   })
 );
+app.use(express.json());
+app.use(cookieParser());
 app.use(morgan('dev'));
 app.use(helmet());
 app.use(errorHandler);
