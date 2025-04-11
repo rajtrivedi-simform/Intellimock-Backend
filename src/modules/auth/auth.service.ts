@@ -18,19 +18,19 @@ export const userLogin = expressAsyncHandler(async (req: Request, res: Response)
   const { userEmail, userPassword } = parsed.data;
 
   if (!userEmail || !userPassword) {
-    return apiResponseHandler(res, 400, 'Email & Password are required to Login');
+    return apiResponseHandler(res, 401, 'Email & Password are required to Login');
   }
 
   const userInstance = await getUserByEmail(userEmail);
 
   if (!userInstance) {
-    return apiResponseHandler(res, 400, `No User with ${userEmail} found!`);
+    return apiResponseHandler(res, 401, `No User with ${userEmail} found!`);
   }
 
   const isValidPassword: boolean = await argon2.verify(userInstance.userPassword, userPassword);
 
   if (!isValidPassword) {
-    return apiResponseHandler(res, 400, 'Invalid Credentials');
+    return apiResponseHandler(res, 401, 'Invalid Credentials');
   }
 
   const authToken = generateAccessToken({ userId: userInstance.userId });
@@ -39,13 +39,13 @@ export const userLogin = expressAsyncHandler(async (req: Request, res: Response)
   res.cookie('auth', authToken, {
     httpOnly: true,
     secure: true,
-    path: '/',
+    sameSite: 'none',
     maxAge: 15 * 60 * 1000,
   });
   res.cookie('refresh', refreshToken, {
     httpOnly: true,
     secure: true,
-    path: '/',
+    sameSite: 'none',
     maxAge: 7 * 24 * 60 * 60 * 1000,
   });
 
@@ -102,7 +102,7 @@ export const authStatus = expressAsyncHandler(
         res.cookie('auth', newAccessToken, {
           httpOnly: true,
           secure: false,
-          path: '/',
+          sameSite: 'none',
           maxAge: 15 * 60 * 1000,
         });
 

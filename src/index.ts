@@ -4,6 +4,7 @@ import morgan from 'morgan';
 import helmet from 'helmet';
 import dotenv from 'dotenv';
 import userRoutes from './modules/auth/auth.routes';
+import questionRoutes from './modules/questions/questions.routes';
 import errorHandler from './middlewares/error.middleware';
 import cookieParser from 'cookie-parser';
 
@@ -14,7 +15,7 @@ const app = express();
 // Middlewares
 app.use(
   cors({
-    origin: '*',
+    origin: ['http://localhost:4200', 'https://ftq6fsw1-4200.inc1.devtunnels.ms'],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true,
   })
@@ -27,6 +28,7 @@ app.use(errorHandler);
 
 // Routes
 app.use('/api/v1/users/', userRoutes);
+app.use('/api/v1/questions/', questionRoutes);
 
 // Health Check
 app.get('/', (req, res) => {
