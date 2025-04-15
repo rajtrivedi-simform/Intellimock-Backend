@@ -5,7 +5,7 @@ export const apiResponseHandler = (
   res: Response,
   status: number,
   msg: string,
-  data?: object
+  data?: object | null
 ): void => {
   res.status(status).json({
     success: status < 400,
