@@ -101,7 +101,7 @@ export const authStatus = expressAsyncHandler(
 
         res.cookie('auth', newAccessToken, {
           httpOnly: true,
-          secure: false,
+          secure: true,
           sameSite: 'none',
           maxAge: 15 * 60 * 1000,
         });

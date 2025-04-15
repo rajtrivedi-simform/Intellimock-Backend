@@ -5,6 +5,7 @@ import helmet from 'helmet';
 import dotenv from 'dotenv';
 import userRoutes from './modules/auth/auth.routes';
 import questionRoutes from './modules/questions/questions.routes';
+import interviewRoutes from './modules/interviews/interviews.routes';
 import errorHandler from './middlewares/error.middleware';
 import cookieParser from 'cookie-parser';
 
@@ -29,6 +30,7 @@ app.use(errorHandler);
 // Routes
 app.use('/api/v1/users/', userRoutes);
 app.use('/api/v1/questions/', questionRoutes);
+app.use('/api/v1/interviews/', interviewRoutes);
 
 // Health Check
 app.get('/', (req, res) => {
