@@ -3,7 +3,8 @@ import cors from 'cors';
 import morgan from 'morgan';
 import helmet from 'helmet';
 import dotenv from 'dotenv';
-import userRoutes from './modules/auth/auth.routes';
+import authRoutes from './modules/auth/auth.routes';
+import userRoutes from './modules/user/user.routes';
 import questionRoutes from './modules/questions/questions.routes';
 import errorHandler from './middlewares/error.middleware';
 import cookieParser from 'cookie-parser';
@@ -27,6 +28,7 @@ app.use(helmet());
 app.use(errorHandler);
 
 // Routes
+app.use('/api/v1/auth/', authRoutes);
 app.use('/api/v1/users/', userRoutes);
 app.use('/api/v1/questions/', questionRoutes);
 
