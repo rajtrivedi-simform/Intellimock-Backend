@@ -1,0 +1,38 @@
+name: CI/CD
+
+on:
+  pull_request:
+    branches:
+      - feature
+
+  push:
+    branches:
+      - feature
+
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '22.14.0'
+
+      - name: Install dependencies
+        run: npm install
+
+
+      - name: Run tests
+        run: npm test
+
+      - name: Deploy to Render
+        if: github.event_name == "push"
+        env:
+          RENDER_API_KEY: ${{ RENDER_API_KEY }}
+        run: |
+        curl -X POST "https://api.render.com/deploy/srv-cvqhqm7gi27c73elh760?key=$RENDER_API_KEY"
