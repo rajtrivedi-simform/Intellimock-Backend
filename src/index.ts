@@ -16,7 +16,7 @@ const app = express();
 // Middlewares
 app.use(
   cors({
-    origin: ['http://localhost:4200', 'https://ftq6fsw1-4200.inc1.devtunnels.ms'],
+    origin: ['http://localhost:4200', 'https://ftq6fsw1-4200.inc1.devtunnels.ms', 'https://tpt38gsj-4200.inc1.devtunnels.ms/'],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true,
   })
