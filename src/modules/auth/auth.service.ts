@@ -38,13 +38,13 @@ export const userLogin = expressAsyncHandler(async (req: Request, res: Response)
 
   res.cookie('auth', authToken, {
     httpOnly: true,
-    // secure: true,
+    secure: true,
     sameSite: 'none',
     maxAge: 15 * 60 * 1000,
   });
   res.cookie('refresh', refreshToken, {
     httpOnly: true,
-    // secure: true,
+    secure: true,
     sameSite: 'none',
     maxAge: 7 * 24 * 60 * 60 * 1000,
   });

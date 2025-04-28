@@ -1,82 +1,87 @@
 import prisma from '../../configs/db.config';
-// import { getUserById } from '../user/user.dal';
-// import { mockInterviewObj } from '../../constants/types/mockInterview';
-// import { apiResponseHandler } from '../../utils/apiResponse.handler';
 
-// export const createInterview = async ({
-//   interviewId,
-//   interviewType,
-//   level,
-//   userId,
-//   skill = 'English',
-// }: mockInterviewObj) => {
-//   try {
-//     const userInstance = await getUserById(userId);
+export const createMockInterview = async (
+  mockInterviewId: string,
+  userId: string,
+  level: string,
+  interviewType: string
+) => {
+  try {
+    const mockIntInstance = await prisma.mockInterview.create({
+      data: {
+        mockIntId: mockInterviewId,
+        userId: userId,
+        level: level,
+        interviewType: interviewType
+      },
+    });
 
-//     if (!userInstance) {
-//       throw new Error('User not found');
-//     }
+    if (!mockIntInstance) {
+      throw new Error('Error Registering Interview');
+    }
 
-//     const interviewInstance = await prisma.interviewData.create({
-//       data: {
-//         interviewId,
-//         userId,
-//         type: interviewType,
-//         skill: skill,
-//         level,
-//       },
-//     });
+    return mockIntInstance;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error('Error creating mock interview.');
+    }
+  }
+};
 
-//     return interviewInstance;
-//   } catch (error) {
-//     console.error('Error creating mock interview:', error);
-//     if (error instanceof Error) {
-//       throw new Error('Server Error');
-//     }
-//   }
-// };
- 
-// export const createMockInterview = async ({
-//   mockInterviewId,
-//   userId,
-//   interviewType,
-//   skill,
-//   level,
-//   question
-// }:{
-//   mockInterviewId:string,
-//   userId: string,
-//   interviewType: "HR Interview" | "mock",
-//   skill: string,
-//   level: string,
-//   question: object
-// }) => {
-//   try{
-//     const interviewInstance = await prisma.mockInterview.create({
-//       data: {
-//       mockIntId: mockInterviewId,
-//       userId: userId,
+export const createCodeInterview = async (
+  codeIntId: string,
+  userId: string,
+  language: string,
+  level: string,
+  question: string
+) => {
+  try {
+    const codeIntInstance = await prisma.codeInterview.create({
+      data: {
+        codeIntId: codeIntId,
+        userId: userId,
+        language: language,
+        level: level,
+        time: 0,
+        question: question,
+        code: '',
+        output: '',
+        feedBack: '',
+      },
+    });
 
-//       }
-//     })
-//   } catch(error){
-//     if(error instanceof Error){
-//       throw new Error('Error creating mock interview.');
-//     }
-//   }
-// }
+    if (!codeIntInstance) {
+      throw new Error('Error Registering Interview');
+    }
+
+    return codeIntInstance;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error('Error creating code interview.');
+    }
+  }
+};
 
 export const getInterviewsByUserId = async (userId: string) => {
   try {
-    const interviews = await prisma.interviewData.findMany({
+    const mockinterviews = await prisma.mockInterview.findMany({
       where: {
         userId: userId,
       },
     });
 
-    if (!interviews) {
+    const codeinterviews = await prisma.codeInterview.findMany({
+      where: {
+        userId: userId,
+      },
+    });
+
+    if (!mockinterviews && !codeinterviews) {
       throw new Error('Interviews not found');
     }
+
+    const interviews = [...mockinterviews, ...codeinterviews];
+
     return interviews;
   } catch (error) {
     if (error instanceof Error) {
@@ -85,26 +90,51 @@ export const getInterviewsByUserId = async (userId: string) => {
   }
 };
 
-export const generateMockInterviewQuestions = async(topic:string, experience: string) => {
-  const url = "https://intellimock-ai.onrender.com/api/v1/ai/generate-question/";
+export const generateMockInterviewQuestions = async (topic: string, experience: string) => {
+  const url = 'https://intellimock-ai.onrender.com/api/v1/ai/generate-question/';
   const payload = {
-    "topic": topic,
-    "experience": experience
-  }
+    topic: topic,
+    experience: experience,
+  };
 
   const res = await fetch(url, {
-    method: "POST",
+    method: 'POST',
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
-    body: JSON.stringify(payload)
-  })
+    body: JSON.stringify(payload),
+  });
 
   const data = await res.json();
 
-  if(!res.ok){
-    throw new Error("Error Generating Questions");
+  if (!res.ok) {
+    throw new Error('Error Generating Questions');
   }
 
   return data;
-}
+};
+
+export const generateCodeInterviewQuestions = async (language: string, level: string) => {
+  const url = 'https://intellimock-ai.onrender.com/api/v1/ai/generate-code-question/';
+
+  const payload = {
+    language: language,
+    level: level,
+  };
+
+  const res = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(payload),
+  });
+
+  const data = await res.json();
+
+  if (!res.ok) {
+    throw new Error('Error Generating Question');
+  }
+
+  return data;
+};

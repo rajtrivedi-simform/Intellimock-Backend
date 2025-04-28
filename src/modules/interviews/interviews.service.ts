@@ -1,74 +1,85 @@
 import { Request, Response } from 'express';
 import { apiResponseHandler } from '../../utils/apiResponse.handler';
 import expressAsyncHandler from 'express-async-handler';
-// import { MockInterviewSchema } from './interviews.validators';
-import { getInterviewsByUserId } from './interviews.dal';
+import { CodeInterviewSchema, MockInterviewSchema } from './interviews.validators';
+import {
+  getInterviewsByUserId,
+  generateMockInterviewQuestions,
+  generateCodeInterviewQuestions,
+  createMockInterview,
+  createCodeInterview,
+} from './interviews.dal';
 import { getIdFromToken } from '../../utils/jwt/jwt.utils';
 
-// export const generateInterview = expressAsyncHandler(
-//   async (req: Request, res: Response): Promise<void> => {
-//     const parsed = interviewSchema.safeParse(req.body);
+export const generateMockInterview = expressAsyncHandler(
+  async (req: Request, res: Response): Promise<void> => {
+    const parsed = MockInterviewSchema.safeParse(req.body);
 
-//     if (!parsed.success) {
-//       return apiResponseHandler(res, 400, 'Validation Failed', parsed.error.flatten().fieldErrors);
-//     }
+    if (!parsed.success) {
+      return apiResponseHandler(res, 400, 'Validation Failed', parsed.error.flatten().fieldErrors);
+    }
 
-//     const { interviewId, interviewType, level, skill } = parsed.data;
+    const { mockInterviewId, interviewType, skill, level } = parsed.data;
+    let question: object = {};
+    if (skill === '' && interviewType === 'self') {
+      question = await generateMockInterviewQuestions('HR Interview', level);
+    } else {
+      question = await generateMockInterviewQuestions(skill!, level);
+    }
 
-//     const userId = (await getIdFromToken(req.cookies.auth))?.userId;
+    if (!question) {
+      return apiResponseHandler(res, 500, 'Internal Server Error');
+    }
 
-//     if (!userId) {
-//       return apiResponseHandler(res, 401, 'Unauthorized');
-//     }
+    const userId = (await getIdFromToken(req.cookies.auth))?.userId;
 
-//     const interviewInstance = await createInterview({
-//       interviewId,
-//       interviewType,
-//       level,
-//       userId: userId,
-//       skill,
-//     });
+    const interviewInstance = await createMockInterview(
+      mockInterviewId,
+      userId!,
+      level,
+      interviewType
+    );
 
-//     if (!interviewInstance) {
-//       return apiResponseHandler(res, 500, 'Internal Server Error');
-//     }
+    if (!interviewInstance) {
+      return apiResponseHandler(res, 400, 'Failed to start Interview');
+    }
 
-//     return apiResponseHandler(res, 201, 'Mock Interview Created Successfully', interviewInstance);
-//   }
-// );
+    return apiResponseHandler(res, 201, 'Interview Started Successfully', question);
+  }
+);
 
-// export const generateMockInterview = expressAsyncHandler(
-//   async(req: Request, res: Response): Promise<void> => {
-//     const parsed = MockInterviewSchema.safeParse(req.body);
+export const generateCodeInterview = expressAsyncHandler(
+  async (req: Request, res: Response): Promise<void> => {
+    const parsed = CodeInterviewSchema.safeParse(req.body);
 
-//     if(!parsed.success){
-//       return apiResponseHandler(res, 400, "Validation Failed", parsed.error.flatten().fieldErrors)
-//     }
+    if (!parsed.success) {
+      return apiResponseHandler(res, 400, 'validation failed', parsed.error.flatten().fieldErrors);
+    }
 
-//     const { mockInterviewId, interviewType, skill, level } = parsed.data;
-//     const question:object = {};
-//     if(skill === undefined){
-//     question = await generateMockInterviewQuestions("HR Interview", level)
-//     } else {
-//       question = await generateMockInterviewQuestions(skill, level)
-//     }
+    const { codeInterviewId, language, experience } = parsed.data;
+    const question = await generateCodeInterviewQuestions(language, experience);
 
-//     if(!question){
-//       return apiResponseHandler(res, 500, "Internal Server Error")
-//     }
+    if (!question) {
+      return apiResponseHandler(res, 500, 'Internal Server Error');
+    }
 
-//     const userId = (await getIdFromToken(req.cookies.auth))?.userId;
+    const userId = (await getIdFromToken(req.cookies.auth))?.userId;
 
-//     const interviewInstance = await createMockInterview({
-//       mockInterviewId,
-//       userId,
-//       interviewType,
-//       skill,
-//       level,
-//       question
-//     })
-//   }
-// )
+    const interviewInstance = await createCodeInterview(
+      codeInterviewId,
+      userId!,
+      language,
+      experience,
+      question
+    );
+
+    if (!interviewInstance) {
+      return apiResponseHandler(res, 400, 'Failed to start interview!');
+    }
+
+    return apiResponseHandler(res, 201, 'Interview Started Successfully', question);
+  }
+);
 
 export const getInterviews = expressAsyncHandler(
   async (req: Request, res: Response): Promise<void> => {
@@ -89,6 +100,7 @@ export const getInterviews = expressAsyncHandler(
 );
 
 export const getQuestions = expressAsyncHandler(
-  async(req: Request, res: Response): Promise<void>=> {
-  return apiResponseHandler(res, 200, "Questions fetched successfully")
-})
+  async (req: Request, res: Response): Promise<void> => {
+    return apiResponseHandler(res, 200, 'Questions fetched successfully');
+  }
+);

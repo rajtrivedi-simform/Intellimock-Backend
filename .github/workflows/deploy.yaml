@@ -1,6 +1,6 @@
-name: Deploy to Render
+name: Deploy to Render # name of workflow
 
-on:
+on: # description of when workflow will run
   push:
     branches:
       - feature
@@ -9,7 +9,7 @@ on:
     branches:
       - feature
 
-jobs:
+jobs: # description of what jobs would be ran during workflow
   deploy:
     runs-on: ubuntu-latest
 
@@ -20,7 +20,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '20' # ✅ Changed from '22.14.0' (not a valid release)
+          node-version: '20'
 
       - name: Install dependencies
         run: npm install
