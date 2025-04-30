@@ -1,4 +1,6 @@
+import { env } from 'process';
 import prisma from '../../configs/db.config';
+import { feedBack } from '../../constants/types/feedBack.type';
 
 export const createMockInterview = async (
   mockInterviewId: string,
@@ -12,7 +14,7 @@ export const createMockInterview = async (
         mockIntId: mockInterviewId,
         userId: userId,
         level: level,
-        interviewType: interviewType
+        interviewType: interviewType,
       },
     });
 
@@ -91,50 +93,90 @@ export const getInterviewsByUserId = async (userId: string) => {
 };
 
 export const generateMockInterviewQuestions = async (topic: string, experience: string) => {
-  const url = 'https://intellimock-ai.onrender.com/api/v1/ai/generate-question/';
+  const url: string = `${env.AI_API_URL}generate-question/`;
   const payload = {
     topic: topic,
     experience: experience,
   };
 
-  const res = await fetch(url, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(payload),
-  });
+  try {
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    });
 
-  const data = await res.json();
+    const data = await res.json();
 
-  if (!res.ok) {
-    throw new Error('Error Generating Questions');
+    if (!res.ok) {
+      throw new Error('Error Generating Questions');
+    }
+
+    return data;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error('Failed to Send Request');
+    }
   }
-
-  return data;
 };
 
 export const generateCodeInterviewQuestions = async (language: string, level: string) => {
-  const url = 'https://intellimock-ai.onrender.com/api/v1/ai/generate-code-question/';
+  const url: string = `${env.AI_API_URL}generate-code-question/`;
 
   const payload = {
     language: language,
     level: level,
   };
 
-  const res = await fetch(url, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(payload),
-  });
+  try {
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    });
 
-  const data = await res.json();
+    const data = await res.json();
 
-  if (!res.ok) {
-    throw new Error('Error Generating Question');
+    if (!res.ok) {
+      throw new Error('Error Generating Question');
+    }
+
+    return data;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error('Failed to Send Request');
+    }
   }
+};
 
-  return data;
+export const generateMockIntFeedback = async (data: Array<feedBack>) => {
+  const url: string = `${env.AI_API_URL}generate-feedback/`;
+
+  const payload: Array<feedBack> = data;
+
+  try {
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      throw new Error('Error Generating Feedback');
+    }
+
+    return data;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error('Failed to Send Request');
+    }
+  }
 };

@@ -1,13 +1,18 @@
 import { Request, Response } from 'express';
 import { apiResponseHandler } from '../../utils/apiResponse.handler';
 import expressAsyncHandler from 'express-async-handler';
-import { CodeInterviewSchema, MockInterviewSchema } from './interviews.validators';
+import {
+  CodeInterviewSchema,
+  MockFeedbackSchema,
+  MockInterviewSchema,
+} from './interviews.validators';
 import {
   getInterviewsByUserId,
   generateMockInterviewQuestions,
   generateCodeInterviewQuestions,
   createMockInterview,
   createCodeInterview,
+  generateMockIntFeedback,
 } from './interviews.dal';
 import { getIdFromToken } from '../../utils/jwt/jwt.utils';
 
@@ -99,8 +104,20 @@ export const getInterviews = expressAsyncHandler(
   }
 );
 
-export const getQuestions = expressAsyncHandler(
-  async (req: Request, res: Response): Promise<void> => {
-    return apiResponseHandler(res, 200, 'Questions fetched successfully');
+export const generateMockFeedback = expressAsyncHandler(async (req: Request, res: Response) => {
+  const parsed = MockFeedbackSchema.safeParse(req.body);
+
+  if (!parsed.success) {
+    return apiResponseHandler(res, 400, 'Validation Failed!', parsed.error.flatten().fieldErrors);
   }
-);
+
+  const { data } = parsed;
+
+  const feedBack = await generateMockIntFeedback(data);
+
+  if (!feedBack) {
+    return apiResponseHandler(res, 400, 'Failed to Generate Feedback');
+  }
+
+  return apiResponseHandler(res, 201, 'Feedback Generated Successfully!', feedBack);
+});

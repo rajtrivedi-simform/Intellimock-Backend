@@ -12,3 +12,10 @@ export const CodeInterviewSchema = z.object({
   language: z.string(),
   experience: z.enum(['junior', 'mid', 'senior']),
 });
+
+const quesansSchema = z.object({
+  question: z.string(),
+  answer: z.string(),
+});
+
+export const MockFeedbackSchema = z.array(quesansSchema);
