@@ -111,9 +111,9 @@ export const generateMockFeedback = expressAsyncHandler(async (req: Request, res
     return apiResponseHandler(res, 400, 'Validation Failed!', parsed.error.flatten().fieldErrors);
   }
 
-  const { data } = parsed;
+  const { feedBackArray, intId } = parsed.data;
 
-  const feedBack = await generateMockIntFeedback(data);
+  const feedBack = await generateMockIntFeedback(feedBackArray, intId);
 
   if (!feedBack) {
     return apiResponseHandler(res, 400, 'Failed to Generate Feedback');

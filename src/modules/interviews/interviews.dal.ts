@@ -153,7 +153,7 @@ export const generateCodeInterviewQuestions = async (language: string, level: st
   }
 };
 
-export const generateMockIntFeedback = async (data: Array<feedBack>) => {
+export const generateMockIntFeedback = async (data: Array<feedBack>, intId: string) => {
   const url: string = `${env.AI_API_URL}generate-feedback/`;
 
   const payload: Array<feedBack> = data;
@@ -171,6 +171,19 @@ export const generateMockIntFeedback = async (data: Array<feedBack>) => {
 
     if (!res.ok) {
       throw new Error('Error Generating Feedback');
+    }
+
+    const interviewInstance = await prisma.mockInterview.update({
+      where: {
+        mockIntId: intId,
+      },
+      data: {
+        feedback: data,
+      },
+    });
+
+    if (!interviewInstance) {
+      throw new Error('Server Error');
     }
 
     return data;

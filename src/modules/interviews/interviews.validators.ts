@@ -18,4 +18,7 @@ const quesansSchema = z.object({
   answer: z.string(),
 });
 
-export const MockFeedbackSchema = z.array(quesansSchema);
+export const MockFeedbackSchema = z.object({
+  feedBackArray: quesansSchema.array(),
+  intId: z.string().uuid(),
+});
