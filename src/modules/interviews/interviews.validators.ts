@@ -3,14 +3,14 @@ import { z } from 'zod';
 export const MockInterviewSchema = z.object({
   mockInterviewId: z.string().uuid(),
   interviewType: z.enum(['mock', 'self']),
-  level: z.enum(['junior', 'mid', 'senior']),
+  level: z.enum(['fresher', 'junior', 'mid', 'senior']),
   skill: z.string().optional(),
 });
 
 export const CodeInterviewSchema = z.object({
   codeInterviewId: z.string().uuid(),
   language: z.string(),
-  experience: z.enum(['junior', 'mid', 'senior']),
+  experience: z.number().min(0),
 });
 
 const quesansSchema = z.object({
@@ -19,6 +19,6 @@ const quesansSchema = z.object({
 });
 
 export const MockFeedbackSchema = z.object({
-  feedBackArray: quesansSchema.array(),
+  feedBackArray: z.array(quesansSchema),
   intId: z.string().uuid(),
 });

@@ -34,10 +34,13 @@ export const createCodeInterview = async (
   codeIntId: string,
   userId: string,
   language: string,
-  level: string,
+  level: number | string,
   question: string
 ) => {
+  level = String(level);
   try {
+    console.log(codeIntId, userId, language, level, question);
+
     const codeIntInstance = await prisma.codeInterview.create({
       data: {
         codeIntId: codeIntId,
@@ -122,12 +125,12 @@ export const generateMockInterviewQuestions = async (topic: string, experience: 
   }
 };
 
-export const generateCodeInterviewQuestions = async (language: string, level: string) => {
+export const generateCodeInterviewQuestions = async (language: string, level: number) => {
   const url: string = `${env.AI_API_URL}generate-code-question/`;
 
   const payload = {
-    language: language,
-    level: level,
+    topic: language,
+    experience: String(level),
   };
 
   try {
@@ -139,16 +142,21 @@ export const generateCodeInterviewQuestions = async (language: string, level: st
       body: JSON.stringify(payload),
     });
 
-    const data = await res.json();
-
     if (!res.ok) {
-      throw new Error('Error Generating Question');
+      const errorData = await res.text();
+      console.error('Error response:', errorData);
+      throw new Error(`Error Generating Question: ${res.status} - ${errorData}`);
     }
 
+    const data = await res.json();
     return data;
   } catch (error) {
     if (error instanceof Error) {
-      throw new Error('Failed to Send Request');
+      console.error('Error in generateCodeInterviewQuestions:', error.message);
+      throw new Error(`Failed to Send Request: ${error.message}`);
+    } else {
+      console.error('Unknown error in generating question:', error);
+      throw new Error('Failed to Send Request: Unknown Error');
     }
   }
 };

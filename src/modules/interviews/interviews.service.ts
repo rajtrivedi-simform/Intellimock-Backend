@@ -15,6 +15,7 @@ import {
   generateMockIntFeedback,
 } from './interviews.dal';
 import { getIdFromToken } from '../../utils/jwt/jwt.utils';
+import { codingQuestionObj } from '../../constants/types/codeQuestionObj.type';
 
 export const generateMockInterview = expressAsyncHandler(
   async (req: Request, res: Response): Promise<void> => {
@@ -62,7 +63,7 @@ export const generateCodeInterview = expressAsyncHandler(
     }
 
     const { codeInterviewId, language, experience } = parsed.data;
-    const question = await generateCodeInterviewQuestions(language, experience);
+    const question: codingQuestionObj = await generateCodeInterviewQuestions(language, experience);
 
     if (!question) {
       return apiResponseHandler(res, 500, 'Internal Server Error');
@@ -75,7 +76,7 @@ export const generateCodeInterview = expressAsyncHandler(
       userId!,
       language,
       experience,
-      question
+      question.problem_statement
     );
 
     if (!interviewInstance) {
@@ -108,6 +109,7 @@ export const generateMockFeedback = expressAsyncHandler(async (req: Request, res
   const parsed = MockFeedbackSchema.safeParse(req.body);
 
   if (!parsed.success) {
+    console.log(req.body);
     return apiResponseHandler(res, 400, 'Validation Failed!', parsed.error.flatten().fieldErrors);
   }
 
