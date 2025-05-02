@@ -12,3 +12,7 @@ export const generateRefreshToken = (payload: object) => {
     expiresIn: '7d',
   });
 };
+
+export const getIdFromToken = (token: string) => {
+  return jwt.decode(token) as { userId: string } | null;
+};

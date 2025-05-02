@@ -1,26 +1,34 @@
 import { Request, Response } from 'express';
 import expressAsyncHandler from 'express-async-handler';
+import { getIdFromToken } from '../../utils/jwt/jwt.utils';
 import { apiResponseHandler } from '../../utils/apiResponse.handler';
 import { getUserById } from './user.dal';
-import { userIdSchema } from './user.validators';
 
 export const getUserDetailsById = expressAsyncHandler(
   async (req: Request, res: Response): Promise<void> => {
-    const parsed = userIdSchema.safeParse(req.params);
+    const userId = await getIdFromToken(req.cookies.auth);
 
-    if (!parsed.success) {
-      const error = parsed.error.flatten().fieldErrors;
-
-      return apiResponseHandler(res, 400, 'Validation Failed', error);
+    if (!userId) {
+      return apiResponseHandler(res, 404, 'Unauthorized User');
     }
 
-    const { userId } = parsed.data;
+    const userInstance = await getUserById(userId.userId);
 
-    const userInstance = await getUserById(userId);
     if (!userInstance) {
-      return apiResponseHandler(res, 404, `No User with id:${userId} found`);
+      return apiResponseHandler(res, 400, 'No User Found');
     }
 
-    return apiResponseHandler(res, 200, 'User Details Fetched Successfully', userInstance);
+    return apiResponseHandler(res, 200, 'User Fetched Successfully', userInstance);
   }
 );
+
+export const userProfile = expressAsyncHandler(async (req: Request, res: Response) => {
+  const userId = await getIdFromToken(req.cookies.auth)?.userId;
+
+  if (!userId) {
+    return apiResponseHandler(res, 404, 'Unauthorized User');
+  }
+
+  //Cloud URL, Skills, Experience
+  
+});

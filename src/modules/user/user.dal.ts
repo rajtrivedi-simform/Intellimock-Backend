@@ -6,6 +6,12 @@ export const getUserById = async (userId: string) => {
       where: {
         userId: userId,
       },
+      select: {
+        userId: true,
+        userEmail: true,
+        userFullName: true,
+        resumeData: true,
+      },
     });
 
     if (!userInstance) {

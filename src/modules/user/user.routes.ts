@@ -1,8 +1,9 @@
 import { Router } from 'express';
-import { getUserDetailsById } from './user.service';
+import { getUserDetailsById, userProfile } from './user.service';
 
 const router = Router();
 
-router.get('/:userId', getUserDetailsById);
+router.get('/', getUserDetailsById);
+router.post('/user-profile', userProfile);
 
 export default router;
