@@ -39,8 +39,6 @@ export const createCodeInterview = async (
 ) => {
   level = String(level);
   try {
-    console.log(codeIntId, userId, language, level, question);
-
     const codeIntInstance = await prisma.codeInterview.create({
       data: {
         codeIntId: codeIntId,

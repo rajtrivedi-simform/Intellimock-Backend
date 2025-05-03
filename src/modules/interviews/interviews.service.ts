@@ -90,7 +90,7 @@ export const generateCodeInterview = expressAsyncHandler(
 export const getInterviews = expressAsyncHandler(
   async (req: Request, res: Response): Promise<void> => {
     const userId = (await getIdFromToken(req.cookies.auth))?.userId;
-    console.log(userId);
+
     if (!userId) {
       return apiResponseHandler(res, 401, 'Unauthorized');
     }
@@ -109,7 +109,6 @@ export const generateMockFeedback = expressAsyncHandler(async (req: Request, res
   const parsed = MockFeedbackSchema.safeParse(req.body);
 
   if (!parsed.success) {
-    console.log(req.body);
     return apiResponseHandler(res, 400, 'Validation Failed!', parsed.error.flatten().fieldErrors);
   }
 
