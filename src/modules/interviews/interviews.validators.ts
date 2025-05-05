@@ -22,3 +22,7 @@ export const MockFeedbackSchema = z.object({
   feedBackArray: z.array(quesansSchema),
   intId: z.string().uuid(),
 });
+
+export const terminateInterviewSchema = z.object({
+  intId: z.string().uuid(),
+});

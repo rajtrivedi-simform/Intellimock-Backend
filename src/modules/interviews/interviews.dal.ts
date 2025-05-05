@@ -1,6 +1,7 @@
 import { env } from 'process';
 import prisma from '../../configs/db.config';
 import { feedBack } from '../../constants/types/feedBack.type';
+import { error } from 'console';
 
 export const createMockInterview = async (
   mockInterviewId: string,
@@ -159,32 +160,106 @@ export const generateCodeInterviewQuestions = async (language: string, level: nu
   }
 };
 
-export const generateMockIntFeedback = async (data: Array<feedBack>, intId: string) => {
-  const url: string = `${env.AI_API_URL}generate-feedback/`;
+// export const generateMockIntFeedback = async (data: Array<feedBack>, intId: string) => {
+//   const url: string = `https://intellimock-ai.onrender.com/api/v1/ai/generate-feedback/`;
 
-  const payload: Array<feedBack> = data;
+//   const payload = JSON.stringify(data);
+
+//   try {
+//     const res = await fetch(url, {
+//       method: 'POST',
+//       headers: {
+//         'Content-Type': 'application/json',
+//       },
+//       body: payload,
+//     });
+
+//     const resData = await res.json();
+
+//     if (!res.ok) {
+//       throw new Error('Error Generating Feedback');
+//     }
+
+//     const interviewInstance = await prisma.mockInterview.update({
+//       where: {
+//         mockIntId: intId,
+//       },
+//       data: {
+//         feedback: resData,
+//       },
+//     });
+
+//     if (!interviewInstance) {
+//       throw new Error('Server Error');
+//     }
+
+//     return data;
+//   } catch (error) {
+//     if (error instanceof Error) {
+//       throw new Error('Failed to Send Request');
+//     }
+//   }
+// };
+
+//Interview Termination Logic;
+export const generateMockIntFeedback = async (feedbackData: Array<feedBack>, intId: string) => {
+  const url = `https://intellimock-ai.onrender.com/api/v1/ai/generate-feedback/`;
 
   try {
-    const res = await fetch(url, {
+    const response = await fetch(url, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(payload),
+      body: JSON.stringify(feedbackData),
     });
 
-    const data = await res.json();
-
-    if (!res.ok) {
-      throw new Error('Error Generating Feedback');
+    if (!response.ok) {
+      const errText = await response.text();
+      console.error('API responded with error:', errText);
+      throw new Error('Error generating feedback from AI API');
     }
 
+    const feedbackResponse = await response.json();
+
+    const interview = await prisma.mockInterview.findUnique({
+      where: {
+        mockIntId: intId,
+      },
+    });
+
+    if (interview) {
+      const interviewInstance = await prisma.mockInterview.update({
+        where: {
+          mockIntId: intId,
+        },
+        data: {
+          feedback: [feedbackResponse],
+        },
+      });
+
+      if (!interviewInstance) {
+        throw new Error('Failed to update mock interview record');
+      }
+
+      return feedbackResponse;
+    } else {
+      throw Error('No Interview Found');
+    }
+  } catch (error) {
+    console.error('generateMockIntFeedback error:', error);
+    throw error; // rethrow original error for better traceability
+  }
+};
+
+export const terminateInterview = async (intId: string) => {
+  try {
     const interviewInstance = await prisma.mockInterview.update({
       where: {
         mockIntId: intId,
       },
       data: {
-        feedback: data,
+        feedback: [JSON.stringify('Cheating')],
       },
     });
 
@@ -192,10 +267,10 @@ export const generateMockIntFeedback = async (data: Array<feedBack>, intId: stri
       throw new Error('Server Error');
     }
 
-    return data;
+    return interviewInstance;
   } catch (error) {
     if (error instanceof Error) {
-      throw new Error('Failed to Send Request');
+      throw new Error('Failed to terminate Interview!');
     }
   }
 };

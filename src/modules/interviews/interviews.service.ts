@@ -5,6 +5,7 @@ import {
   CodeInterviewSchema,
   MockFeedbackSchema,
   MockInterviewSchema,
+  terminateInterviewSchema,
 } from './interviews.validators';
 import {
   getInterviewsByUserId,
@@ -13,6 +14,7 @@ import {
   createMockInterview,
   createCodeInterview,
   generateMockIntFeedback,
+  terminateInterview,
 } from './interviews.dal';
 import { getIdFromToken } from '../../utils/jwt/jwt.utils';
 import { codingQuestionObj } from '../../constants/types/codeQuestionObj.type';
@@ -122,3 +124,23 @@ export const generateMockFeedback = expressAsyncHandler(async (req: Request, res
 
   return apiResponseHandler(res, 201, 'Feedback Generated Successfully!', feedBack);
 });
+
+export const terminateInterviewController = expressAsyncHandler(
+  async (req: Request, res: Response) => {
+    const parsed = terminateInterviewSchema.safeParse(req.body);
+
+    if (!parsed.success) {
+      return apiResponseHandler(res, 400, 'Validation Error', parsed.error.flatten().fieldErrors);
+    }
+
+    const { intId } = parsed.data;
+
+    const terminatedInstance = await terminateInterview(intId);
+
+    if (!terminatedInstance) {
+      return apiResponseHandler(res, 400, 'Failed to terminate Interview');
+    }
+
+    return apiResponseHandler(res, 200, 'Interview Terminated');
+  }
+);
