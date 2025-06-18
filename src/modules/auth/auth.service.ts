@@ -115,3 +115,20 @@ export const authStatus = expressAsyncHandler(
     return apiResponseHandler(res, 200, 'User Logged In');
   }
 );
+
+export const logout = expressAsyncHandler(async (req: Request, res: Response) => {
+  res.cookie('auth', '', {
+    httpOnly: true,
+    secure: true,
+    sameSite: 'none',
+    maxAge: 1000,
+  });
+  res.cookie('refresh', '', {
+    httpOnly: true,
+    secure: true,
+    sameSite: 'none',
+    maxAge: 1000,
+  });
+
+  return apiResponseHandler(res, 200, 'Logout Successful');
+});
