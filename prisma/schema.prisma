@@ -14,14 +14,16 @@ datasource db {
 }
 
 model userData {
-  userId       String @id
-  userFullName String
-  userEmail    String @unique
-  userPassword String
-
+  userId        String          @id
+  userFullName  String
+  userEmail     String          @unique
+  userPassword  String
   resumeData    resumeData[]
-  interviewData interviewData[]
   comments      comments[]
+  codeInterview codeInterview[]
+  mockInterview mockInterview[]
+
+  @@index([userEmail])
 }
 
 model resumeData {
@@ -29,42 +31,33 @@ model resumeData {
   userId         String
   user           userData @relation(fields: [userId], references: [userId])
   resumeCloudUrl String
-  skills         String[]
+  skills         String[] @default([])
   experience     Int
   Timestamp      DateTime @default(now())
 }
 
-model interviewData {
-  interviewId   String          @id
-  userId        String
-  user          userData        @relation(fields: [userId], references: [userId])
-  type          String
-  skill         String
-  level         String
-  Timestamp     DateTime        @default(now())
-  codeInterview codeInterview[]
-  mockInterview mockInterview[]
-}
-
 model codeInterview {
-  codeIntId   String        @id
-  interviewId String
-  interview   interviewData @relation(fields: [interviewId], references: [interviewId])
-  language    String
-  time        BigInt
-  question    String
-  code        String
-  output      String
-  feedBack    String
-  Timestamp   DateTime      @default(now())
+  codeIntId String   @id
+  userId    String
+  user      userData @relation(fields: [userId], references: [userId])
+  language  String
+  level     String
+  time      BigInt
+  question  String
+  code      String
+  output    String
+  feedBack  String
+  Timestamp DateTime @default(now())
 }
 
 model mockInterview {
-  mockIntId   String        @id
-  interviewId String
-  interview   interviewData @relation(fields: [interviewId], references: [interviewId])
-  feedback    Json[]
-  Timestamp   DateTime      @default(now())
+  mockIntId     String   @id
+  userId        String
+  user          userData @relation(fields: [userId], references: [userId])
+  interviewType String
+  level         String
+  feedback      Json[]   @default([])
+  Timestamp     DateTime @default(now())
 }
 
 model practiceQuestions {
