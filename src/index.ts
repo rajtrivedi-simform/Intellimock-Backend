@@ -6,6 +6,7 @@ import dotenv from 'dotenv';
 import authRoutes from './modules/auth/auth.routes';
 import userRoutes from './modules/user/user.routes';
 import questionRoutes from './modules/questions/questions.routes';
+import interviewRoutes from './modules/interviews/interviews.routes';
 import errorHandler from './middlewares/error.middleware';
 import cookieParser from 'cookie-parser';
 
@@ -16,7 +17,11 @@ const app = express();
 // Middlewares
 app.use(
   cors({
-    origin: ['http://localhost:4200', 'https://ftq6fsw1-4200.inc1.devtunnels.ms'],
+    origin: [
+      'http://localhost:4200',
+      'https://ftq6fsw1-4200.inc1.devtunnels.ms',
+      'https://tpt38gsj-4200.inc1.devtunnels.ms',
+    ],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true,
   })
@@ -31,6 +36,7 @@ app.use(errorHandler);
 app.use('/api/v1/auth/', authRoutes);
 app.use('/api/v1/users/', userRoutes);
 app.use('/api/v1/questions/', questionRoutes);
+app.use('/api/v1/interviews/', interviewRoutes);
 
 // Health Check
 app.get('/', (req, res) => {
