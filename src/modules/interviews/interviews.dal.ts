@@ -1,7 +1,6 @@
-import { env } from 'process';
 import prisma from '../../configs/db.config';
 import { feedBack } from '../../constants/types/feedBack.type';
-import { error } from 'console';
+import { AI_API_URL } from '../../configs/env.config';
 
 export const createMockInterview = async (
   mockInterviewId: string,
@@ -95,7 +94,7 @@ export const getInterviewsByUserId = async (userId: string) => {
 };
 
 export const generateMockInterviewQuestions = async (topic: string, experience: string) => {
-  const url: string = `${env.AI_API_URL}generate-question/`;
+  const url: string = `${AI_API_URL}api/v1/ai/generate-question/`;
   const payload = {
     topic: topic,
     experience: experience,
@@ -125,7 +124,7 @@ export const generateMockInterviewQuestions = async (topic: string, experience: 
 };
 
 export const generateCodeInterviewQuestions = async (language: string, level: number) => {
-  const url: string = `${env.AI_API_URL}generate-code-question/`;
+  const url: string = `${AI_API_URL}api/v1/ai/generate-code-question/`;
 
   const payload = {
     topic: language,

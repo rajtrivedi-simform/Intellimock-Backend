@@ -10,7 +10,7 @@ import interviewRoutes from './modules/interviews/interviews.routes';
 import errorHandler from './middlewares/error.middleware';
 import cookieParser from 'cookie-parser';
 import { CORS_CLIENTS } from './configs/env.config';
-// import nodeCron from 'node-cron';
+import nodeCron from 'node-cron';
 
 dotenv.config(); // Load .env variables
 
@@ -37,13 +37,17 @@ app.use('/api/v1/questions/', questionRoutes);
 app.use('/api/v1/interviews/', interviewRoutes);
 
 // Health Check
-app.get('/', (req, res) => {
+app.get('/', (_, res) => {
   res.send('🚀 IntelliMock API is running...');
 });
 
 // cron job schedule
-// nodeCron.schedule('* * * * * *', () => {
-//   console.log('Running a task every 10 minutes');
-// });
+nodeCron.schedule('*/5 * * * *', async () => {
+  try {
+    await fetch('https://intellimock-ai-70li.onrender.com/');
+  } catch (error) {
+    console.error(error);
+  }
+});
 
 export default app;
