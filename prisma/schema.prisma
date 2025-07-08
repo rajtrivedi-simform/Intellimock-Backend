@@ -76,5 +76,14 @@ model comments {
   userId            String
   user              userData          @relation(fields: [userId], references: [userId])
   userFullName      String
+  parentCommentId   String
+  comments        comments          @relation(fields: [parentCommentId], references: [commentId])
   Timestamp         DateTime          @default(now())
+  comments          comments[]
+}
+
+// Model for skills tags
+model skills {
+  skillId   String @id
+  skillName String @unique
 }

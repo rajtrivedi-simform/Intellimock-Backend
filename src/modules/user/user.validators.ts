@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 export const userProfileSchema = z.object({
-  resumeCloudURL: z.string(),
+  cloudURL: z.string(),
   skills: z.array(z.string()),
   experience: z.number(),
 });

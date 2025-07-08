@@ -1,4 +1,6 @@
+import { v4 as uuid } from 'uuid';
 import prisma from '../../configs/db.config';
+import { userProfileSchema } from '../../constants/types/userProfileSchema';
 
 export const getUserById = async (userId: string) => {
   try {
@@ -70,5 +72,25 @@ export const fetchTokens = async (url: string) => {
     if (error instanceof Error) {
       throw new Error('Token Service Offline!');
     }
+  }
+};
+
+export const postUserProfiel = async (data: userProfileSchema) => {
+  try {
+    const { cloudURL, skills, experience } = data;
+    if (!cloudURL || !skills || !experience) {
+      throw new Error('Invalid data provided');
+    }
+
+    const profileInstance = await prisma.resumeData.create({
+      data: {
+        resumeId: uuid(),
+        resumeCloudUrl: cloudURL,
+        skills: skills,
+        experience: experience,
+      },
+    });
+  } catch (error) {
+    throw new Error(error.message || 'Error saving profile');
   }
 };

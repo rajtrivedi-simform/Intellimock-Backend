@@ -4,7 +4,7 @@ import expressAsyncHandler from 'express-async-handler';
 import { getIdFromToken } from '../../utils/jwt/jwt.utils';
 import { apiResponseHandler } from '../../utils/apiResponse.handler';
 import { fetchTokens, getUserById } from './user.dal';
-import { string } from 'zod';
+import { userProfileSchema } from './user.validators';
 
 export const getUserDetailsById = expressAsyncHandler(
   async (req: Request, res: Response): Promise<void> => {
@@ -24,6 +24,13 @@ export const getUserDetailsById = expressAsyncHandler(
 );
 
 export const userProfile = expressAsyncHandler(async (req: Request, res: Response) => {
+  const parsed = userProfileSchema.safeParse(req.body);
+
+  if (!parsed.success) {
+    const error = parsed.error.flatten().fieldErrors;
+    return apiResponseHandler(res, 400, 'Validation Failed', error);
+  }
+
   const userId = await getIdFromToken(req.cookies.auth)?.userId;
 
   if (!userId) {
@@ -31,6 +38,9 @@ export const userProfile = expressAsyncHandler(async (req: Request, res: Respons
   }
 
   //Cloud URL, Skills, Experience
+  console.log('data:', parsed.data);
+
+  
 });
 
 export const resumeUpload = expressAsyncHandler(async (req: Request, res: Response) => {
@@ -63,8 +73,6 @@ export const resumeUpload = expressAsyncHandler(async (req: Request, res: Respon
       return apiResponseHandler(res, 400, 'No Tokens Found for the Uploaded File');
     }
 
-    
-
     return apiResponseHandler(res, 201, 'File Uploaded Successfully', {
       cloudURL,
       tokens,
@@ -75,3 +83,9 @@ export const resumeUpload = expressAsyncHandler(async (req: Request, res: Respon
     }
   }
 });
+
+export const querySkills = expressAsyncHandler(
+  async (req: Request, res: Response): Promise<void> => {
+    return apiResponseHandler(res, 200, 'Skills Queried');
+  }
+);
