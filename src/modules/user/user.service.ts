@@ -3,7 +3,7 @@ import { Request, Response } from 'express';
 import expressAsyncHandler from 'express-async-handler';
 import { getIdFromToken } from '../../utils/jwt/jwt.utils';
 import { apiResponseHandler } from '../../utils/apiResponse.handler';
-import { fetchTokens, getUserById } from './user.dal';
+import { fetchTokens, getSkills, getUserById, getUserProfile, postUserProfile } from './user.dal';
 import { userProfileSchema } from './user.validators';
 
 export const getUserDetailsById = expressAsyncHandler(
@@ -34,17 +34,21 @@ export const userProfile = expressAsyncHandler(async (req: Request, res: Respons
   const userId = await getIdFromToken(req.cookies.auth)?.userId;
 
   if (!userId) {
-    return apiResponseHandler(res, 404, 'Unauthorized User');
+    return apiResponseHandler(res, 401, 'Unauthorized User');
   }
 
-  //Cloud URL, Skills, Experience
-  console.log('data:', parsed.data);
+  const profileInstance = await postUserProfile(userId, parsed.data);
 
-  
+  if (!profileInstance) {
+    return apiResponseHandler(res, 404, 'Error Saving Profile');
+  }
+
+  return apiResponseHandler(res, 201, 'Profile Saved Successfully', profileInstance);
 });
 
 export const resumeUpload = expressAsyncHandler(async (req: Request, res: Response) => {
   const file: string | undefined = req.file?.path;
+  const userId: string = (await getIdFromToken(req.cookies.auth)?.userId) as string;
   let cloudURL: string | void = '';
   let tokens: string[] | string = '';
 
@@ -57,23 +61,13 @@ export const resumeUpload = expressAsyncHandler(async (req: Request, res: Respon
     });
 
     // Upload file to Cloudinary and store the URL
-    cloudURL = await cloudinary.uploader
-      .upload(file as string, {
-        resource_type: 'raw',
-      })
-      .then((res) => {
-        return res.url;
-      })
-      .catch(() => apiResponseHandler(res, 500, 'Error Uploading File to Cloudinary'));
+    const profile = await getUserProfile(userId);
 
-    // Fetch tokens from the uploaded file
-    tokens = typeof cloudURL === 'string' ? await fetchTokens(cloudURL) : '';
+    cloudURL = profile ? profile.resumeCloudUrl : await uploader(file as string, res);
 
-    if (!tokens || tokens.length === 0) {
-      return apiResponseHandler(res, 400, 'No Tokens Found for the Uploaded File');
-    }
+    tokens = await fetchTokens(cloudURL as string);
 
-    return apiResponseHandler(res, 201, 'File Uploaded Successfully', {
+    return apiResponseHandler(res, 201, 'tokens fetched successfully', {
       cloudURL,
       tokens,
     });
@@ -86,6 +80,28 @@ export const resumeUpload = expressAsyncHandler(async (req: Request, res: Respon
 
 export const querySkills = expressAsyncHandler(
   async (req: Request, res: Response): Promise<void> => {
-    return apiResponseHandler(res, 200, 'Skills Queried');
+    const query: string = req.query.query as string;
+
+    const data = await getSkills(query);
+
+    if (!data) {
+      return apiResponseHandler(res, 400, 'Skill Not Found');
+    }
+
+    return apiResponseHandler(res, 200, 'Skills Queried', { data });
   }
 );
+
+// Helper Function
+const uploader = async (file: string, res: Response) => {
+  const cloudURL = await cloudinary.uploader
+    .upload(file as string, {
+      resource_type: 'raw',
+    })
+    .then((res) => {
+      return res.url;
+    })
+    .catch(() => apiResponseHandler(res, 500, 'Error Uploading File to Cloudinary'));
+
+  return cloudURL;
+};
