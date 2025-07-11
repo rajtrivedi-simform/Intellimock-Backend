@@ -16,3 +16,15 @@ export const getQuestionByID = async (id: string): Promise<QuestionObj | null> =
 
   return question;
 };
+
+export const questionSearch = async (term: string) => {
+  const questions = await prisma.practiceQuestions.findMany({
+    where: {
+      question: {
+        contains: term,
+      },
+    },
+  });
+
+  return questions;
+};

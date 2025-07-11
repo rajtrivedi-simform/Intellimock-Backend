@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { getAllQuestions, getQuestionByID } from './questions.dal';
+import { getAllQuestions, getQuestionByID, questionSearch } from './questions.dal';
 import { QuestionObj } from '../../constants/types/questionObj';
 import expressAsyncHandler from 'express-async-handler';
 import { apiResponseHandler } from '../../utils/apiResponse.handler';
@@ -32,4 +32,25 @@ export const fetchQuestion = expressAsyncHandler(
 
     return apiResponseHandler(res, 200, 'Question fetched successfully', questionInstance);
   }
+);
+
+export const searchQuestion = expressAsyncHandler(
+  async (req: Request, res: Response): Promise<void> => {
+    const searchQuery = req.query.term as string;
+
+    if (!searchQuery) {
+      return apiResponseHandler(res, 400, 'Enter a valid Search Query');
+    }
+    const searchResults = await questionSearch(searchQuery);
+
+    if (!searchResults.length) {
+      return apiResponseHandler(res, 400, `No Questions Found for term:${searchQuery}`);
+    }
+
+    return apiResponseHandler(res, 200, 'Questions Fetched Successfully', searchResults);
+  }
+);
+
+export const postQuestion = expressAsyncHandler(
+  async (req: Request, res: Response): Promise<void> => {}
 );
