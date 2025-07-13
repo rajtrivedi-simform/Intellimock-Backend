@@ -1,15 +1,15 @@
-name: CI/CD
+name: Deploy to Render # name of workflow
 
-on:
-  pull_request:
-    branches:
-      - feature
-
+on: # description of when workflow will run
   push:
     branches:
       - feature
 
-jobs:
+  pull_request:
+    branches:
+      - feature
+
+jobs: # description of what jobs would be ran during workflow
   deploy:
     runs-on: ubuntu-latest
 
@@ -17,10 +17,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Setup Node.js
+      - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '22.14.0'
+          node-version: '20'
 
       - name: Install dependencies
         run: npm install
@@ -29,8 +29,11 @@ jobs:
         run: npm test
 
       - name: Deploy to Render
-        if: github.event_name == "push"
         env:
           RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
         run: |
-          curl -X POST "https://api.render.com/deploy/srv-cvqhqm7gi27c73elh760?key=$RENDER_API_KEY"
+          curl -X POST \
+            -H "Authorization: Bearer $RENDER_API_KEY" \
+            -H "Content-Type: application/json" \
+            -d '{}' \
+            https://api.render.com/v1/services/srv-cvqhqm7gi27c73elh760/deploys
