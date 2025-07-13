@@ -28,7 +28,7 @@ model userData {
 
 model resumeData {
   resumeId       String   @id
-  userId         String
+  userId         String   @unique
   user           userData @relation(fields: [userId], references: [userId])
   resumeCloudUrl String
   skills         String[] @default([])
@@ -76,5 +76,16 @@ model comments {
   userId            String
   user              userData          @relation(fields: [userId], references: [userId])
   userFullName      String
+  parentCommentId   String?
+  parentComment     comments?         @relation("CommentToReplies", fields: [parentCommentId], references: [commentId])
+  replies           comments[]        @relation("CommentToReplies")
   Timestamp         DateTime          @default(now())
+}
+
+// Model for skills tags
+model skills {
+  skillId        String   @id
+  skillName      String   @unique
+  normalisedName String   @unique
+  createdAt      DateTime @default(now())
 }
