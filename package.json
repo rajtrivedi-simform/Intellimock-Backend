@@ -5,6 +5,8 @@
   "main": "server.js",
   "scripts": {
     "start": "tsx watch src/server.ts",
+    "start:prod": "node dist/src/server.js",
+    "build": "tsc",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
@@ -23,6 +25,7 @@
     "helmet": "^8.1.0",
     "jsonwebtoken": "^9.0.2",
     "morgan": "^1.10.0",
+    "node-cron": "^4.1.0",
     "uuid": "^11.1.0",
     "zod": "^3.24.2"
   },
