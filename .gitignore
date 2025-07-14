@@ -1,5 +1,6 @@
 node_modules
 .env
+seed.ts
 prisma/generated/
 dist/
 uploads/
