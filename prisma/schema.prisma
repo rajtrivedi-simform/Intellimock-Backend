@@ -14,14 +14,15 @@ datasource db {
 }
 
 model userData {
-  userId        String          @id
-  userFullName  String
-  userEmail     String          @unique
-  userPassword  String
-  resumeData    resumeData[]
-  comments      comments[]
-  codeInterview codeInterview[]
-  mockInterview mockInterview[]
+  userId            String              @id
+  userFullName      String
+  userEmail         String              @unique
+  userPassword      String
+  resumeData        resumeData[]
+  comments          comments[]
+  codeInterview     codeInterview[]
+  mockInterview     mockInterview[]
+  practiceQuestions practiceQuestions[]
 
   @@index([userEmail])
 }
@@ -66,6 +67,8 @@ model practiceQuestions {
   type       String
   skill      String
   level      String
+  userId     String?
+  user       userData?  @relation(fields: [userId], references: [userId])
   comments   comments[]
 }
 
