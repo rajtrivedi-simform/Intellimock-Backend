@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { addQuestion, getAllQuestions, getQuestionByID, questionSearch } from './questions.dal';
+import { addQuestion, getAllQuestions, getQuestionByID, questionSearch, getQuestionsForUser } from './questions.dal';
 import { QuestionObj } from '../../constants/types/questionObj';
 import expressAsyncHandler from 'express-async-handler';
 import { apiResponseHandler } from '../../utils/apiResponse.handler';
@@ -68,7 +68,7 @@ export const postQuestion = expressAsyncHandler(
     const userID = await getIdFromToken(req.cookies.auth)?.userId;
 
     if (!userID) {
-      return apiResponseHandler(res, 404, 'UnAuthorised User');
+      return apiResponseHandler(res, 401, 'UnAuthorised User');
     }
 
     const quesInstance = addQuestion(data, userID);
@@ -80,3 +80,21 @@ export const postQuestion = expressAsyncHandler(
     return apiResponseHandler(res, 201, 'Question Added Successfully');
   }
 );
+
+export const getQuestionsByUser = expressAsyncHandler(
+  async(req: Request, res: Response): Promise<void> => {
+    const userId = await getIdFromToken(req.cookies.auth)?.userId;
+
+    if(!userId){
+      return apiResponseHandler(res, 401, 'UnAuthorised User');
+    }
+
+    const myquestions: QuestionObj[] | undefined = await getQuestionsForUser(userId);
+
+    if(!myquestions){
+      return apiResponseHandler(res, 404, "No Questions found for this User");
+    }
+
+    return apiResponseHandler(res, 200, "Questions Fetched Successfully", myquestions)
+  }
+)

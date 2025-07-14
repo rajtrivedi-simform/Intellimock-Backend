@@ -62,8 +62,8 @@ export const addQuestion = async (
     const questionInstance = prisma.practiceQuestions.create({
       data: {
         ...data,
-        userId: userId,
         questionId: uuid()+data.type,
+        userId: userId
       },
     });
 
@@ -75,3 +75,23 @@ export const addQuestion = async (
   }
   return null;
 };
+
+export const getQuestionsForUser = async(userId: string) => {
+  try {
+    const questions = await prisma.practiceQuestions.findMany({
+      where: {
+        userId: userId
+      }
+    });
+
+    if(!questions){
+      throw new Error('No Questions found for this user');
+    }
+
+    return questions;
+  } catch (error) {
+    if(error instanceof PrismaClientKnownRequestError){
+      throw new Error(error.message)
+    }
+  }
+}

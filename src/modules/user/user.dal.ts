@@ -211,6 +211,11 @@ export const fetchProfile = async (userId: string) => {
       where: {
         userId: userId,
       },
+      select: {
+        resumeCloudUrl: true,
+        skills: true,
+        experience: true
+      }
     });
 
     if (!profileInstance) {

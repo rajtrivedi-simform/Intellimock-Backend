@@ -4,4 +4,5 @@ export interface QuestionObj {
   type: string;
   skill: string;
   level: string;
+  userId: string
 }

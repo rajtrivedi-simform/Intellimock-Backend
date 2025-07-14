@@ -70,6 +70,7 @@ model practiceQuestions {
   userId     String?
   user       userData?  @relation(fields: [userId], references: [userId])
   comments   comments[]
+  createdAt DateTime @default(now())
 }
 
 model comments {
