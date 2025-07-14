@@ -1,12 +1,14 @@
 import { Request, Response } from 'express';
-import { getAllQuestions, getQuestionByID, questionSearch } from './questions.dal';
+import { addQuestion, getAllQuestions, getQuestionByID, questionSearch } from './questions.dal';
 import { QuestionObj } from '../../constants/types/questionObj';
 import expressAsyncHandler from 'express-async-handler';
 import { apiResponseHandler } from '../../utils/apiResponse.handler';
+import { questionSchema } from './questions.validators';
+import { getIdFromToken } from 'utils/jwt/jwt.utils';
 
 export const fetchQuestions = expressAsyncHandler(
   async (req: Request, res: Response): Promise<void> => {
-    const questionsArray: Array<QuestionObj> = await getAllQuestions();
+    const questionsArray: Array<QuestionObj> | null = await getAllQuestions();
 
     if (!questionsArray) {
       return apiResponseHandler(res, 404, 'No Queestions Found');
@@ -43,7 +45,7 @@ export const searchQuestion = expressAsyncHandler(
     }
     const searchResults = await questionSearch(searchQuery);
 
-    if (!searchResults.length) {
+    if (!searchResults) {
       return apiResponseHandler(res, 400, `No Questions Found for term:${searchQuery}`);
     }
 
@@ -52,5 +54,29 @@ export const searchQuestion = expressAsyncHandler(
 );
 
 export const postQuestion = expressAsyncHandler(
-  async (req: Request, res: Response): Promise<void> => {}
+  async (req: Request, res: Response): Promise<void> => {
+    const parsed = questionSchema.safeParse(req.body);
+
+    if (parsed.error) {
+      const error = parsed.error.flatten().fieldErrors;
+
+      return apiResponseHandler(res, 400, 'Error Adding a Question', error);
+    }
+
+    const { data } = parsed;
+
+    const userID = await getIdFromToken(req.cookies.auth)?.userId;
+
+    if (!userID) {
+      return apiResponseHandler(res, 404, 'UnAuthorised User');
+    }
+
+    const quesInstance = addQuestion(data, userID);
+
+    if (quesInstance == null) {
+      return apiResponseHandler(res, 400, 'Failed to add Question');
+    }
+
+    return apiResponseHandler(res, 201, 'Question Added Successfully');
+  }
 );
