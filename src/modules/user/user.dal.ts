@@ -180,3 +180,27 @@ export const getSkills = async (query: string) => {
     }
   }
 };
+
+export const getUsersSkills = async (userId: string) => {
+  try {
+    const userSkills = await prisma.resumeData.findUnique({
+      where: {
+        userId: userId,
+      },
+      select: {
+        skills: true,
+      },
+    });
+
+    if (!userSkills) {
+      throw new Error('No Skills Found for this User');
+    }
+
+    return userSkills;
+  } catch (error) {
+    if (error instanceof PrismaClientKnownRequestError) {
+      throw new Error('Error fetching user skills');
+    }
+    throw new Error(`Error: ${error ? error : 'Unknown error'}`);
+  }
+};

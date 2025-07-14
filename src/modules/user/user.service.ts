@@ -3,7 +3,14 @@ import { Request, Response } from 'express';
 import expressAsyncHandler from 'express-async-handler';
 import { getIdFromToken } from '../../utils/jwt/jwt.utils';
 import { apiResponseHandler } from '../../utils/apiResponse.handler';
-import { fetchTokens, getSkills, getUserById, getUserProfile, postUserProfile } from './user.dal';
+import {
+  fetchTokens,
+  getSkills,
+  getUserById,
+  getUserProfile,
+  postUserProfile,
+  getUsersSkills,
+} from './user.dal';
 import { userProfileSchema } from './user.validators';
 
 export const getUserDetailsById = expressAsyncHandler(
@@ -89,6 +96,24 @@ export const querySkills = expressAsyncHandler(
     }
 
     return apiResponseHandler(res, 200, 'Skills Queried', { data });
+  }
+);
+
+export const getUserSkills = expressAsyncHandler(
+  async (req: Request, res: Response): Promise<void> => {
+    const userId = await getIdFromToken(req.cookies.auth)?.userId;
+
+    if (!userId) {
+      return apiResponseHandler(res, 401, 'Unauthorized User');
+    }
+
+    const skillsInstance = await getUsersSkills(userId);
+
+    if (!skillsInstance) {
+      return apiResponseHandler(res, 404, 'No Skills Found for this User');
+    }
+
+    return apiResponseHandler(res, 200, 'User Skills Fetched Successfully', skillsInstance);
   }
 );
 
