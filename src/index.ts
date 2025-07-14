@@ -9,7 +9,7 @@ import questionRoutes from './modules/questions/questions.routes';
 import interviewRoutes from './modules/interviews/interviews.routes';
 import errorHandler from './middlewares/error.middleware';
 import cookieParser from 'cookie-parser';
-import { CORS_CLIENTS } from './configs/env.config';
+import { AI_API_URL, CORS_CLIENTS, PARSER_API_URL } from './configs/env.config';
 import nodeCron from 'node-cron';
 
 dotenv.config(); // Load .env variables
@@ -45,7 +45,15 @@ app.get('/', (_, res) => {
 // cron job schedule
 nodeCron.schedule('*/5 * * * *', async () => {
   try {
-    await fetch('https://intellimock-ai-70li.onrender.com/');
+    await fetch(`${AI_API_URL}`);
+  } catch (error) {
+    console.error(error);
+  }
+});
+
+nodeCron.schedule('*/5 * * * *', async () => {
+  try {
+    await fetch(`${PARSER_API_URL}`);
   } catch (error) {
     console.error(error);
   }

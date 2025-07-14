@@ -204,3 +204,23 @@ export const getUsersSkills = async (userId: string) => {
     throw new Error(`Error: ${error ? error : 'Unknown error'}`);
   }
 };
+
+export const fetchProfile = async (userId: string) => {
+  try {
+    const profileInstance = await prisma.resumeData.findUnique({
+      where: {
+        userId: userId,
+      },
+    });
+
+    if (!profileInstance) {
+      throw new Error('No User Found');
+    }
+
+    return profileInstance;
+  } catch (error) {
+    if (error instanceof PrismaClientKnownRequestError) {
+      throw new Error(error.message);
+    }
+  }
+};

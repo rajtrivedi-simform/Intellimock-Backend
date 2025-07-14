@@ -10,6 +10,7 @@ import {
   getUserProfile,
   postUserProfile,
   getUsersSkills,
+  fetchProfile,
 } from './user.dal';
 import { userProfileSchema } from './user.validators';
 
@@ -51,6 +52,22 @@ export const userProfile = expressAsyncHandler(async (req: Request, res: Respons
   }
 
   return apiResponseHandler(res, 201, 'Profile Saved Successfully', profileInstance);
+});
+
+export const getProfile = expressAsyncHandler(async (req: Request, res: Response) => {
+  const userId = await getIdFromToken(req.cookies.auth)?.userId;
+
+  if (!userId) {
+    return apiResponseHandler(res, 401, 'UnAuthorised User');
+  }
+
+  const profileInstance = await fetchProfile(userId);
+
+  if (!profileInstance) {
+    return apiResponseHandler(res, 400, 'Not Found');
+  }
+
+  return apiResponseHandler(res, 200, 'User Fetched Successfully', profileInstance);
 });
 
 export const resumeUpload = expressAsyncHandler(async (req: Request, res: Response) => {

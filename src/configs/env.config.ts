@@ -12,3 +12,4 @@ export const JWT_REFRESH_KEY = process.env.JWT_REFRESH_KEY || 'your_refresh_toke
 export const CLIENT_URL = process.env.CLIENT_URL || 'http://localhost:3000';
 export const CORS_CLIENTS = process.env.CORS_CLIENTS;
 export const AI_API_URL = process.env.AI_API_URL;
+export const PARSER_API_URL = process.env.PARSER_API_URL

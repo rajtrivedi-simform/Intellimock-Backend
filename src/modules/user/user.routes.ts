@@ -1,6 +1,13 @@
 import multer from 'multer';
 import { Router } from 'express';
-import { getUserDetailsById, getUserSkills, querySkills, resumeUpload, userProfile } from './user.service';
+import {
+  getProfile,
+  getUserDetailsById,
+  getUserSkills,
+  querySkills,
+  resumeUpload,
+  userProfile,
+} from './user.service';
 
 const router = Router();
 const upload = multer({
@@ -16,6 +23,7 @@ const upload = multer({
 });
 
 router.get('/', getUserDetailsById);
+router.get('/profile', getProfile);
 router.post('/profile', userProfile);
 router.post('/resume', upload.single('resumeFile'), resumeUpload);
 router.get('/skills', querySkills);
