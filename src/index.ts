@@ -12,6 +12,7 @@ import cookieParser from 'cookie-parser';
 import { AI_API_URL, CORS_CLIENTS, PARSER_API_URL } from './configs/env.config';
 import nodeCron from 'node-cron';
 
+
 dotenv.config(); // Load .env variables
 
 const app = express();

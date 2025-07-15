@@ -159,47 +159,6 @@ export const generateCodeInterviewQuestions = async (language: string, level: nu
   }
 };
 
-// export const generateMockIntFeedback = async (data: Array<feedBack>, intId: string) => {
-//   const url: string = `https://intellimock-ai.onrender.com/api/v1/ai/generate-feedback/`;
-
-//   const payload = JSON.stringify(data);
-
-//   try {
-//     const res = await fetch(url, {
-//       method: 'POST',
-//       headers: {
-//         'Content-Type': 'application/json',
-//       },
-//       body: payload,
-//     });
-
-//     const resData = await res.json();
-
-//     if (!res.ok) {
-//       throw new Error('Error Generating Feedback');
-//     }
-
-//     const interviewInstance = await prisma.mockInterview.update({
-//       where: {
-//         mockIntId: intId,
-//       },
-//       data: {
-//         feedback: resData,
-//       },
-//     });
-
-//     if (!interviewInstance) {
-//       throw new Error('Server Error');
-//     }
-
-//     return data;
-//   } catch (error) {
-//     if (error instanceof Error) {
-//       throw new Error('Failed to Send Request');
-//     }
-//   }
-// };
-
 //Interview Termination Logic;
 export const generateMockIntFeedback = async (feedbackData: Array<feedBack>, intId: string) => {
   const url = `https://intellimock-ai.onrender.com/api/v1/ai/generate-feedback/`;

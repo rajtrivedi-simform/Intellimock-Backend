@@ -214,8 +214,8 @@ export const fetchProfile = async (userId: string) => {
       select: {
         resumeCloudUrl: true,
         skills: true,
-        experience: true
-      }
+        experience: true,
+      },
     });
 
     if (!profileInstance) {
