@@ -12,6 +12,7 @@ async function main() {
     // HR Questions
     {
       questionId: `${uuid()}-hr`,
+      userId: 'cec59cf2-7b32-45c5-864e-3a2cb8e3c716',
       question: 'Tell me about a time you took initiative at work.',
       type: 'HR',
       skill: 'Leadership',
@@ -19,6 +20,7 @@ async function main() {
     },
     {
       questionId: `${uuid()}-hr`,
+      userId: 'cec59cf2-7b32-45c5-864e-3a2cb8e3c716',
       question: 'How do you prioritize tasks when under pressure?',
       type: 'HR',
       skill: 'Time Management',
@@ -26,6 +28,7 @@ async function main() {
     },
     {
       questionId: `${uuid()}-hr`,
+      userId: 'cec59cf2-7b32-45c5-864e-3a2cb8e3c716',
       question: 'Describe a situation where you resolved a workplace disagreement.',
       type: 'HR',
       skill: 'Conflict Resolution',
@@ -33,6 +36,7 @@ async function main() {
     },
     {
       questionId: `${uuid()}-hr`,
+      userId: 'cec59cf2-7b32-45c5-864e-3a2cb8e3c716',
       question: 'What are your strengths and weaknesses?',
       type: 'HR',
       skill: 'Self-Awareness',
@@ -40,6 +44,7 @@ async function main() {
     },
     {
       questionId: `${uuid()}-hr`,
+      userId: 'cec59cf2-7b32-45c5-864e-3a2cb8e3c716',
       question: 'Tell me about a time you failed and what you learned from it.',
       type: 'HR',
       skill: 'Resilience',
@@ -47,6 +52,7 @@ async function main() {
     },
     {
       questionId: `${uuid()}-hr`,
+      userId: 'cec59cf2-7b32-45c5-864e-3a2cb8e3c716',
       question: 'How do you handle feedback?',
       type: 'HR',
       skill: 'Adaptability',
@@ -54,6 +60,7 @@ async function main() {
     },
     {
       questionId: `${uuid()}-hr`,
+      userId: 'cec59cf2-7b32-45c5-864e-3a2cb8e3c716',
       question: 'Describe your ideal work environment.',
       type: 'HR',
       skill: 'Work Culture Fit',
@@ -61,6 +68,7 @@ async function main() {
     },
     {
       questionId: `${uuid()}-hr`,
+      userId: 'cec59cf2-7b32-45c5-864e-3a2cb8e3c716',
       question: 'How do you stay motivated during repetitive tasks?',
       type: 'HR',
       skill: 'Motivation',
@@ -68,6 +76,7 @@ async function main() {
     },
     {
       questionId: `${uuid()}-hr`,
+      userId: 'cec59cf2-7b32-45c5-864e-3a2cb8e3c716',
       question: 'Tell me about a time you helped a coworker succeed.',
       type: 'HR',
       skill: 'Teamwork',
@@ -75,6 +84,7 @@ async function main() {
     },
     {
       questionId: `${uuid()}-hr`,
+      userId: 'cec59cf2-7b32-45c5-864e-3a2cb8e3c716',
       question: 'What is your approach to handling tight deadlines?',
       type: 'HR',
       skill: 'Stress Management',
@@ -84,6 +94,7 @@ async function main() {
     // Technical Questions
     {
       questionId: `${uuid()}-technical`,
+      userId: 'cec59cf2-7b32-45c5-864e-3a2cb8e3c716',
       question: 'Explain how event loop works in JavaScript.',
       type: 'Technical',
       skill: 'JavaScript',
@@ -91,6 +102,7 @@ async function main() {
     },
     {
       questionId: `${uuid()}-technical`,
+      userId: 'cec59cf2-7b32-45c5-864e-3a2cb8e3c716',
       question: 'What are the differences between localStorage and sessionStorage?',
       type: 'Technical',
       skill: 'Web Storage',
@@ -98,6 +110,7 @@ async function main() {
     },
     {
       questionId: `${uuid()}-technical`,
+      userId: 'cec59cf2-7b32-45c5-864e-3a2cb8e3c716',
       question: 'How would you design a scalable chat application?',
       type: 'Technical',
       skill: 'System Design',
@@ -105,6 +118,7 @@ async function main() {
     },
     {
       questionId: `${uuid()}-technical`,
+      userId: 'cec59cf2-7b32-45c5-864e-3a2cb8e3c716',
       question: 'What are closures in JavaScript?',
       type: 'Technical',
       skill: 'JavaScript',
@@ -112,6 +126,7 @@ async function main() {
     },
     {
       questionId: `${uuid()}-technical`,
+      userId: 'cec59cf2-7b32-45c5-864e-3a2cb8e3c716',
       question: 'Explain the SOLID principles of object-oriented design.',
       type: 'Technical',
       skill: 'Software Engineering',
@@ -119,6 +134,7 @@ async function main() {
     },
     {
       questionId: `${uuid()}-technical`,
+      userId: 'cec59cf2-7b32-45c5-864e-3a2cb8e3c716',
       question: 'What is the difference between synchronous and asynchronous programming?',
       type: 'Technical',
       skill: 'Programming Concepts',
@@ -126,6 +142,7 @@ async function main() {
     },
     {
       questionId: `${uuid()}-technical`,
+      userId: 'cec59cf2-7b32-45c5-864e-3a2cb8e3c716',
       question: 'How would you optimize a slow-running SQL query?',
       type: 'Technical',
       skill: 'Database Optimization',
@@ -133,6 +150,7 @@ async function main() {
     },
     {
       questionId: `${uuid()}-technical`,
+      userId: 'cec59cf2-7b32-45c5-864e-3a2cb8e3c716',
       question: 'What is dependency injection and why is it useful?',
       type: 'Technical',
       skill: 'Software Architecture',
@@ -140,6 +158,7 @@ async function main() {
     },
     {
       questionId: `${uuid()}-technical`,
+      userId: 'cec59cf2-7b32-45c5-864e-3a2cb8e3c716',
       question: 'How does a CDN work and why would you use one?',
       type: 'Technical',
       skill: 'Web Performance',
@@ -147,6 +166,7 @@ async function main() {
     },
     {
       questionId: `${uuid()}-technical`,
+      userId: 'cec59cf2-7b32-45c5-864e-3a2cb8e3c716',
       question: 'What are web sockets and how are they different from HTTP?',
       type: 'Technical',
       skill: 'Networking',
@@ -156,6 +176,7 @@ async function main() {
     // Coding Questions
     {
       questionId: `${uuid()}-coding`,
+      userId: 'cec59cf2-7b32-45c5-864e-3a2cb8e3c716',
       question: 'Write a Python program to check if a number is prime.',
       type: 'Coding',
       skill: 'Python',
@@ -163,6 +184,7 @@ async function main() {
     },
     {
       questionId: `${uuid()}-coding`,
+      userId: 'cec59cf2-7b32-45c5-864e-3a2cb8e3c716',
       question: 'Implement a queue using two stacks in Java.',
       type: 'Coding',
       skill: 'Data Structures',
@@ -170,6 +192,7 @@ async function main() {
     },
     {
       questionId: `${uuid()}-coding`,
+      userId: 'cec59cf2-7b32-45c5-864e-3a2cb8e3c716',
       question: 'Write a C++ program to detect a cycle in a linked list.',
       type: 'Coding',
       skill: 'Algorithms',
@@ -177,6 +200,7 @@ async function main() {
     },
     {
       questionId: `${uuid()}-coding`,
+      userId: 'cec59cf2-7b32-45c5-864e-3a2cb8e3c716',
       question: 'Write a JavaScript function to flatten a nested array.',
       type: 'Coding',
       skill: 'JavaScript',
@@ -184,6 +208,7 @@ async function main() {
     },
     {
       questionId: `${uuid()}-coding`,
+      userId: 'cec59cf2-7b32-45c5-864e-3a2cb8e3c716',
       question: 'Write a Python function to compute the nth Fibonacci number.',
       type: 'Coding',
       skill: 'Recursion',
@@ -191,6 +216,7 @@ async function main() {
     },
     {
       questionId: `${uuid()}-coding`,
+      userId: 'cec59cf2-7b32-45c5-864e-3a2cb8e3c716',
       question: 'Implement a stack with min() function in constant time.',
       type: 'Coding',
       skill: 'Data Structures',
@@ -198,6 +224,7 @@ async function main() {
     },
     {
       questionId: `${uuid()}-coding`,
+      userId: 'cec59cf2-7b32-45c5-864e-3a2cb8e3c716',
       question: 'Write a program in Java to sort an array using merge sort.',
       type: 'Coding',
       skill: 'Algorithms',
@@ -205,6 +232,7 @@ async function main() {
     },
     {
       questionId: `${uuid()}-coding`,
+      userId: 'cec59cf2-7b32-45c5-864e-3a2cb8e3c716',
       question: 'Implement a simple REST API using Node.js and Express.',
       type: 'Coding',
       skill: 'Backend Development',
@@ -212,6 +240,7 @@ async function main() {
     },
     {
       questionId: `${uuid()}-coding`,
+      userId: 'cec59cf2-7b32-45c5-864e-3a2cb8e3c716',
       question: 'Write a C++ program to reverse a linked list.',
       type: 'Coding',
       skill: 'C++',
@@ -219,6 +248,7 @@ async function main() {
     },
     {
       questionId: `${uuid()}-coding`,
+      userId: 'cec59cf2-7b32-45c5-864e-3a2cb8e3c716',
       question: 'Write a Python script to read and parse a JSON file.',
       type: 'Coding',
       skill: 'File Handling',
